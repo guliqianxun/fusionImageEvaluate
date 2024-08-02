@@ -10,7 +10,7 @@ import numpy as np
 import cv2
 from scipy.ndimage import convolve
 
-def Qabf(imgA_path, imgB_path, imgF_path):
+def Qabf(imgA, imgB, imgF):
     """
     compute the QABF metric for the given images
     :param imgA_path: path to the first image
@@ -36,24 +36,19 @@ def Qabf(imgA_path, imgB_path, imgF_path):
     h1 = np.array([[1, 2, 1], [0, 0, 0], [-1, -2, -1]])
     h3 = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
 
-    # Load images
-    pA = cv2.imread(imgA_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
-    pB = cv2.imread(imgB_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
-    pF = cv2.imread(imgF_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
-
     # Compute gradients
-    SAx = convolve(pA, h3)
-    SAy = convolve(pA, h1)
+    SAx = convolve(imgA, h3)
+    SAy = convolve(imgA, h1)
     gA = np.sqrt(SAx ** 2 + SAy ** 2)
     aA = np.arctan2(SAy, SAx)
 
-    SBx = convolve(pB, h3)
-    SBy = convolve(pB, h1)
+    SBx = convolve(imgB, h3)
+    SBy = convolve(imgB, h1)
     gB = np.sqrt(SBx ** 2 + SBy ** 2)
     aB = np.arctan2(SBy, SBx)
 
-    SFx = convolve(pF, h3)
-    SFy = convolve(pF, h1)
+    SFx = convolve(imgF, h3)
+    SFy = convolve(imgF, h1)
     gF = np.sqrt(SFx ** 2 + SFy ** 2)
     aF = np.arctan2(SFy, SFx)
 
@@ -84,5 +79,9 @@ if __name__ == '__main__':
     imgA_path = 'Resources/Patient_12_MR_cropped_000_real_A.png'
     imgB_path = 'Resources/Patient_12_MR_cropped_000_real_B.png'
     imgF_path = 'Resources/Patient_12_MR_cropped_000_real_F.png'
-    output = Qabf(imgA_path, imgB_path, imgF_path)
+    # Load images
+    pA = cv2.imread(imgA_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
+    pB = cv2.imread(imgB_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
+    pF = cv2.imread(imgF_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
+    output = Qabf(pA, pB, pF)
     print("QABF:", output)
